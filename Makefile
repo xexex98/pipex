@@ -5,52 +5,48 @@
 #                                                     +:+ +:+         +:+      #
 #    By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/12/29 22:18:36 by mbarra            #+#    #+#              #
-#    Updated: 2021/12/29 22:18:36 by mbarra           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/21 13:37:47 by mbarra            #+#    #+#              #
-#    Updated: 2021/12/28 18:43:15 by mbarra           ###   ########.fr        #
+#    Updated: 2022/01/07 15:47:51 by mbarra           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = pipex
+NAME		=	pipex\
 
-HEADER = pipex.h
+HEADER		=	./inc/pipex.h\
 
-SRC =	pipex.c\
+# HEADER_B	=	./inc/pipex_bonus.h\
 
-OBJ = $(patsubst %.c, %.o, $(SRC))
+SRC			=	./src/pipex.c\
 
-RM 			= rm -f
-FLAGS 		= -Wall -Wextra -Werror
+# SRC_B		=	../gnl/get_next_line.c\
+				# ../gnl/get_next_line_utils.c\
+
+OBJ	= $(SRC:.c=.o)
+
+# OBJ_B	= $(SRC_B:.c=.o)
+
 CC			= gcc
+RM 			= rm -f
+CFLAGS 		= -Wall -Wextra -Werror
 
-all: $(NAME) 
+all: $(NAME)
+# %.o: %.c  $(HEADER) $(HEADER_B)
+%.o: %.c  $(HEADER)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJ)
-# make -C ./mlx
-	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
-	rm *.o
+$(NAME): $(OBJ) $(HEADER)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
-%.o: %.c $(HEADER)
-	$(CC) $(FLAGS) -c $< -o $@
+# $(NAME_B) : 
+# bonus: $(OBJ_B) $(HEADER_B)
+# 	$(CC) $(CFLAGS) $(OBJ_B) -o $(NAME_B)
 
 clean:
 	$(RM) $(OBJ)
-# make clean -C ./mlx
-
+#  $(OBJ_B)
 fclean: clean
 	$(RM) $(NAME)
-
+#  $(NAME_B)
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: bonus all clean fclean re
