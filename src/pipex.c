@@ -32,24 +32,52 @@ int main(int argc, char *argv[], char **env)
 	int pipefd[2];
 	int in;
 	int out;
-	
+
 	argv[1] = "f1";
-	argv[2] = "f2";
+	argv[4] = "f2";
 	in = open(argv[1], O_RDONLY);
-	out = open(argv[2], O_RDWR | O_CREAT | O_TRUNC, 0777);
+	out = open(argv[4], O_RDWR | O_CREAT | O_TRUNC, 0777);
 	if (in < 0 || out < 0)
 		err(3);
+
 	if (pipe(pipefd) == -1)
 		err(1);
+	dup2(in, 0); //теперь стандартный ВВОД это мой файл, а не консоль.
+	dup2(out, 1); //теперь стандартный ВЫВОД это мой файл, а не консоль.
 	pid = fork();
 	if (pid == -1)
 		err(2);
+	char *args[] = {"pwd", NULL};
 
-	// char *args[] = {"ls", "-l", "-a", NULL};
-	// execve("/bin/ls", args, env);
-	printf ("hi\n");
-	dup2(in, 0);
-	dup2(out, 1);
-	write(out, "Hi\n", 3);
+	// родителю возвращается PID процесса-потомка, а потомку возвращается 0
+	if (pid == 0)
+	{
+		//дочерний процесс
+		dup2(pipefd[1], 1); //теперь стандартный ВЫВОД сюда запишется то что ВВЕЛИ
+		printf("0\n");
+		execve("/bin/pwd", args, env);
+		
+		close(pipefd[0]);
+		close(in);
+	}
+	if (pid > 0)
+	{
+		//родительский процесс
+		dup2(pipefd[0], 0); //теперь стандартный ВЫВОД сюда запишется то что ВВЕЛИ
+		printf(">0\n");
+		execve("/bin/pwd", args, env);
+		access("/bin/pwd", F_OK);
+		close(pipefd[1]);
+		close(out);
+	}
+	// char buf[100];
+
+	// dup2(out, 1); //теперь стандартный ВЫВОД это мой файл, а не консоль.
+	// read(in, buf, 3);
+
+	// write(out, buf, 3);
+	
+
 	return (0);
 }
+// > ./pipex file1 cmd1 cmd2 file2
