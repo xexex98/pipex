@@ -1,1 +1,1 @@
-leaks --atExit -- ./pipex f1 "ct" "ct"
+leaks --atExit -- ./pipex f1
