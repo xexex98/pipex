@@ -6,44 +6,11 @@
 /*   By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 11:42:11 by mbarra            #+#    #+#             */
-/*   Updated: 2022/01/10 20:12:43 by mbarra           ###   ########.fr       */
+/*   Updated: 2022/01/11 16:09:52 by mbarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/pipex.h"
-//убрать рпинтф он запрещен, доисправлять вывод ошибок
-void	ft_execve(char **cmds, char **env)
-{
-	char	**bin;
-	char	*bincmd;
-	int		i;
-	char	*slash;
-
-	i = 0;
-	while (!ft_strnstr(env[i], "PATH", 4))
-		i++;
-	bin = ft_split(env[i] + 5, ':');
-	i = -1;
-	if (cmds[0][0] == '/')
-		err(5);
-	while (bin[++i])
-	{
-		slash = ft_strjoin(bin[i], "/");
-		bincmd = ft_strjoin(slash, cmds[0]);
-		free(slash);
-		if (access(bincmd, F_OK) == 0)
-		{
-			free_bin_split(bin);
-			execve(bincmd, cmds, env);
-			exit(0);
-		}
-		free(bincmd);
-	}
-	free_bin_split(bin);
-	write (2, cmds[0], ft_strlen(cmds[0]));
-	write (2, ": command not found\n", 21);
-	exit(1);
-}
 
 void	pipex(int in, int out, char **argv, char **env)
 {
@@ -51,10 +18,10 @@ void	pipex(int in, int out, char **argv, char **env)
 	int		pipefd[2];
 
 	if (pipe(pipefd) == -1)
-		err(1);
+		err(1, NULL);
 	pid = fork();
 	if (pid == -1)
-		err(2);
+		err(2, NULL);
 	if (pid > 0)
 		parent_pid(out, pipefd, argv, env);
 	else if (pid == 0)
@@ -91,15 +58,15 @@ int	main(int argc, char **argv, char **env)
 	int		out;
 
 	if (argc != 5)
-		err(4);
+		err(4, NULL);
 	in = open(argv[1], O_RDONLY);
 	out = open(argv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (in < 0 || out < 0)
-		err(3);
+		err(3, NULL);
 	dup2(in, 0);
 	dup2(out, 1);
 	close(in);
 	close(out);
 	pipex(in, out, argv, env);
-	return (0);
+	return (EXIT_SUCCESS);
 }

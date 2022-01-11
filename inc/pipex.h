@@ -6,7 +6,7 @@
 /*   By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 17:39:03 by mbarra            #+#    #+#             */
-/*   Updated: 2022/01/10 19:23:50 by mbarra           ###   ########.fr       */
+/*   Updated: 2022/01/11 16:05:05 by mbarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@
 # include <string.h>
 # include "../libft/libft.h"
 
+int		err(int err, char *cmds);
 void	free_bin_split(char **bin);
-int		err(int err);
 void	parent_pid(int in, int *pipefd, char **argv, char **env);
 void	child_pid(int out, int *pipefd, char **argv, char **env);
 void	ft_execve(char **cmds, char **env);
+char	**ft_path(char	**env);
 
 #endif
