@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 17:39:03 by mbarra            #+#    #+#             */
-/*   Updated: 2022/01/11 16:16:20 by mbarra           ###   ########.fr       */
+/*   Updated: 2022/01/11 16:55:35 by mbarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -19,6 +19,7 @@
 # include <fcntl.h>
 # include <string.h>
 # include "../libft/libft.h"
+# include "../gnl/get_next_line.h"
 
 void	child_pid(int out, int *pipefd, char **argv, char **env);
 void	parent_pid(int in, int *pipefd, char **argv, char **env);
