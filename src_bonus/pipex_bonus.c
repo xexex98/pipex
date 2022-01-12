@@ -1,72 +1,91 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/10 11:42:11 by mbarra            #+#    #+#             */
-/*   Updated: 2022/01/11 16:13:50 by mbarra           ###   ########.fr       */
+/*   Created: 2022/01/11 20:45:42 by mbarra            #+#    #+#             */
+/*   Updated: 2022/01/12 19:49:26 by mbarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/pipex.h"
+#include "../inc/pipex_bonus.h"
 
-void	child_pid(int in, int *pipefd, char **argv, char **env)
+void	ft_execve(char	*argv, char **env)
 {
+	char	**bin;
 	char	**cmds;
+	char	*bincmd;
+	char	*slash;
+	int		i;
 
-	close(pipefd[0]);
-	dup2(pipefd[1], STDOUT_FILENO);
-	close(pipefd[1]);
-	dup2(in, STDIN_FILENO);
-	cmds = ft_split(argv[2], ' ');
-	ft_execve(cmds, env);
+	cmds = ft_split(argv, ' ');
+	i = -1;
+	if (ft_strchr(cmds[0], '/') != NULL)
+		err(6, cmds[0]);
+	bin = ft_path(env);
+	while (bin[++i])
+	{
+		slash = ft_strjoin(bin[i], "/");
+		bincmd = ft_strjoin(slash, cmds[0]);
+		free(slash);
+		if (access(bincmd, F_OK) == 0)
+		{
+			if (execve(bincmd, cmds, env) == -1)
+				err(7, NULL);
+		}
+		free(bincmd);
+	}
+	free_bin_split(bin);
+	err(5, argv);
 }
 
-void	parent_pid(int out, int *pipefd, char **argv, char **env)
-{
-	char	**cmds;
-
-	close(pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	close(pipefd[0]);
-	dup2(out, STDOUT_FILENO);
-	cmds = ft_split(argv[3], ' ');
-	ft_execve(cmds, env);
-}
-
-void	pipex(int in, int out, char **argv, char **env)
+void	pipex(char *argv, char **env)
 {
 	pid_t	pid;
 	int		pipefd[2];
 
 	if (pipe(pipefd) == -1)
-		err(1, NULL);
+		err(0, NULL);
 	pid = fork();
 	if (pid == -1)
-		err(2, NULL);
+		err(1, NULL);
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+			err(2, NULL);
+		ft_execve(argv, env);
+	}
 	if (pid > 0)
-		parent_pid(out, pipefd, argv, env);
-	else if (pid == 0)
-		child_pid(in, pipefd, argv, env);
+	{
+		close(pipefd[1]);
+		if (dup2(pipefd[0], STDIN_FILENO) == -1)
+			err(2, NULL);
+		waitpid(pid, NULL, 0);
+	}
 }
 
 int	main(int argc, char **argv, char **env)
 {
+	int		i;
 	int		in;
 	int		out;
 
-	if (argc != 5)
-		err(4, NULL);
 	in = open(argv[1], O_RDONLY);
-	out = open(argv[4], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	out = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (in < 0 || out < 0)
 		err(3, NULL);
-	dup2(in, 0);
-	dup2(out, 1);
+	if (dup2(in, STDIN_FILENO) == -1)
+		err(2, NULL);
 	close(in);
+	i = 2;
+	while (i < argc - 2)
+		pipex(argv[i++], env);
+	if (dup2(out, STDOUT_FILENO) == -1)
+		err(2, NULL);
 	close(out);
-	pipex(in, out, argv, env);
+	ft_execve(argv[argc - 2], env);
 	return (EXIT_SUCCESS);
 }

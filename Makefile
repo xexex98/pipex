@@ -42,7 +42,7 @@ $(NAME): $(OBJ) $(HEADER)
 	$(CC) $(CFLAGS) $(INC) $(OBJ) -o $(NAME) $(LIB)
 	rm ./src/*.o
 
-# $(NAME_B)
+# $(NAME_B) поменяяять
 b: $(OBJ_B) $(HEADER_B)
 	$(CC) $(CFLAGS) $(INC) $(OBJ_B) -o $(NAME) $(LIB)
 	rm ./src_bonus/*.o
@@ -50,8 +50,8 @@ b: $(OBJ_B) $(HEADER_B)
 clean:
 	make clean -C ./libft
 	$(RM) $(OBJ) $(OBJ_B)
-
-fclean: clean
+# $(NAME_B) поменяяять
+f: clean
 	make clean -C ./libft
 	$(RM) $(NAME) $(NAME_B)
 

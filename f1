@@ -1,1 +1,4 @@
 asdasd
+< f1 cat | ls | grep a| pwd | ls> f2
+./pipex f1 cat cat cat f2
+dsf

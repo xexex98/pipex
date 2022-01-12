@@ -6,7 +6,7 @@
 /*   By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 19:21:25 by mbarra            #+#    #+#             */
-/*   Updated: 2022/01/11 16:14:34 by mbarra           ###   ########.fr       */
+/*   Updated: 2022/01/12 19:55:20 by mbarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	ft_execve(char **cmds, char **env)
 {
 	char	**bin;
 	char	*bincmd;
-	int		i;
 	char	*slash;
+	int		i;
 
 	i = -1;
 	if (ft_strchr(cmds[0], '/') != NULL)
@@ -57,8 +57,8 @@ void	ft_execve(char **cmds, char **env)
 		if (access(bincmd, F_OK) == 0)
 		{
 			free_bin_split(bin);
-			execve(bincmd, cmds, env);
-			exit(0);
+			if (execve(bincmd, cmds, env) == -1)
+				err(7, NULL);
 		}
 		free(bincmd);
 	}
@@ -68,7 +68,7 @@ void	ft_execve(char **cmds, char **env)
 
 int	err(int err, char *cmds)
 {
-	if (err == 1)
+	if (err == 0)
 		perror("Pipe");
 	if (err == 1)
 		perror("Fork");
@@ -88,5 +88,7 @@ int	err(int err, char *cmds)
 		write (2, cmds, ft_strlen(cmds));
 		write (2, ": no such file or directory\n", 29);
 	}
+	if (err == 7)
+		perror("Execve");
 	exit(EXIT_FAILURE);
 }
