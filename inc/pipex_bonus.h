@@ -6,7 +6,7 @@
 /*   By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/07 17:39:03 by mbarra            #+#    #+#             */
-/*   Updated: 2022/01/12 19:45:19 by mbarra           ###   ########.fr       */
+/*   Updated: 2022/01/12 21:35:42 by mbarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <fcntl.h>
 # include <string.h>
 # include "../libft/libft.h"
-// # include "../gnl/get_next_line.h"
+# include "../gnl/get_next_line.h"
 
 void	ft_execve(char	*argv, char **env);
 void	pipex(char *argv, char **env);

@@ -21,6 +21,8 @@ SRC			=	./src/pipex.c\
 
 SRC_B		=	./src_bonus/pipex_bonus.c\
 				./src_bonus/pipex_utils_bonus.c\
+				./gnl/get_next_line.c\
+				./gnl/get_next_line_utils.c\
 
 OBJ	= $(SRC:.c=.o)
 
@@ -28,7 +30,7 @@ OBJ_B	= $(SRC_B:.c=.o)
 
 CC			= gcc
 RM 			= rm -f
-CFLAGS 		= -Wall -Wextra -Werror
+CFLAGS 		= #-Wall -Wextra -Werror
 INC			= -I ./inc -I ./libft -I ./gnl
 LIB			= -L ./libft -lft
 
@@ -40,21 +42,20 @@ all: $(NAME)
 $(NAME): $(OBJ) $(HEADER)
 	@make -C ./libft
 	$(CC) $(CFLAGS) $(INC) $(OBJ) -o $(NAME) $(LIB)
-	rm ./src/*.o
+	rm -f ./src/*.o
 
 # $(NAME_B) поменяяять
 b: $(OBJ_B) $(HEADER_B)
 	$(CC) $(CFLAGS) $(INC) $(OBJ_B) -o $(NAME) $(LIB)
-	rm ./src_bonus/*.o
+	rm -f ./src_bonus/*.o
+	rm -f ./gnl/*.o
 
 clean:
-	make clean -C ./libft
 	$(RM) $(OBJ) $(OBJ_B)
 # $(NAME_B) поменяяять
 f: clean
 	make clean -C ./libft
 	$(RM) $(NAME) $(NAME_B)
-
-re: fclean all
+re: fclean all b
 
 .PHONY: bonus all clean fclean re
