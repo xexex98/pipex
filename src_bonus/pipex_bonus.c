@@ -6,7 +6,7 @@
 /*   By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 20:45:42 by mbarra            #+#    #+#             */
-/*   Updated: 2022/01/12 22:33:32 by mbarra           ###   ########.fr       */
+/*   Updated: 2022/01/13 18:15:18 by mbarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,23 @@ int	main(int argc, char **argv, char **env)
 	int		i;
 	int		in;
 	int		out;
+
+	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
+	{
+		// printf("%i", ft_strncmp("asd", "a", 1));
+		char	*gnl;
+	
+		out = open("f2", O_RDWR | O_CREAT | O_APPEND, 0644);
+		while ((gnl = get_next_line(0)))
+		{	
+			// поменять длинны местами чтоб обработал первый символ
+			if (ft_strncmp(gnl, argv[2], ft_strlen(gnl)) == 0)
+				exit(EXIT_SUCCESS);
+			write(out, gnl, ft_strlen(gnl));
+			free(gnl);
+		}
+		return (0);
+	}
 
 	in = open(argv[1], O_RDONLY);
 	out = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
