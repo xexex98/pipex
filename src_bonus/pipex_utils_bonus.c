@@ -6,7 +6,7 @@
 /*   By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 19:21:25 by mbarra            #+#    #+#             */
-/*   Updated: 2022/01/12 19:46:53 by mbarra           ###   ########.fr       */
+/*   Updated: 2022/01/14 20:29:58 by mbarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	err(int err, char *cmds)
 	if (err == 3)
 		perror("Open");
 	if (err == 4)
-		write(2, "Invalid argc num!\n", 19);
+		write(2, "./pipex_bonus <file1> <cmd> <cmd1> ... <cmdn> <file2>\n", 55);
 	if (err == 5)
 	{
 		write (2, cmds, ft_strlen(cmds));
@@ -62,5 +62,23 @@ int	err(int err, char *cmds)
 	}
 	if (err == 7)
 		perror("Execve");
+	if (err == 8)
+		write (2, "./pipex_bonus here_doc <LIMITER> <cmd> <cmd1> <file>\n", 54);
 	exit(EXIT_FAILURE);
+}
+
+void	ft_part_1(int argc, char **argv)
+{
+	if (argc < 6)
+		err(8, NULL);
+	ft_heredoc_exe(argv);
+}
+
+void	ft_part_2(int in, int out)
+{
+	if (in < 0 || out < 0)
+		err(3, NULL);
+	if (dup2(in, STDIN_FILENO) == -1)
+		err(2, NULL);
+	close(in);
 }

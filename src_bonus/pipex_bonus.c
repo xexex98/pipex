@@ -6,7 +6,7 @@
 /*   By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 20:45:42 by mbarra            #+#    #+#             */
-/*   Updated: 2022/01/13 18:15:18 by mbarra           ###   ########.fr       */
+/*   Updated: 2022/01/14 20:08:51 by mbarra           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,45 @@ void	pipex(char *argv, char **env)
 	}
 }
 
+void	ft_gnl(int *pipefd, char **argv)
+{
+	char	*gnl;
+
+	close(pipefd[0]);
+	write(1, "heredoc>", 9);
+	gnl = get_next_line(0);
+	while (gnl)
+	{	
+		if (ft_strcmp(gnl, argv[2]) == 0)
+			exit(EXIT_SUCCESS);
+		write(pipefd[1], gnl, ft_strlen(gnl));
+		free(gnl);
+		write(1, "heredoc>", 9);
+		gnl = get_next_line(0);
+	}
+}
+
+void	ft_heredoc_exe(char **argv)
+{
+	pid_t	pid;
+	int		pipefd[2];
+
+	if (pipe(pipefd) == -1)
+		err(0, NULL);
+	pid = fork();
+	if (pid == -1)
+		err(1, NULL);
+	if (pid == 0)
+		ft_gnl(pipefd, argv);
+	else if (pid > 0)
+	{
+		close(pipefd[1]);
+		if (dup2(pipefd[0], STDIN_FILENO) == -1)
+			err(2, NULL);
+		waitpid(pid, NULL, 0);
+	}
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	int		i;
@@ -75,34 +114,23 @@ int	main(int argc, char **argv, char **env)
 
 	if (ft_strncmp(argv[1], "here_doc", 8) == 0)
 	{
-		// printf("%i", ft_strncmp("asd", "a", 1));
-		char	*gnl;
-	
-		out = open("f2", O_RDWR | O_CREAT | O_APPEND, 0644);
-		while ((gnl = get_next_line(0)))
-		{	
-			// поменять длинны местами чтоб обработал первый символ
-			if (ft_strncmp(gnl, argv[2], ft_strlen(gnl)) == 0)
-				exit(EXIT_SUCCESS);
-			write(out, gnl, ft_strlen(gnl));
-			free(gnl);
-		}
-		return (0);
+		i = 3;
+		out = open(argv[argc - 1], O_RDWR | O_CREAT | O_APPEND, 0644);
+		ft_part_1(argc, argv);
 	}
-
-	in = open(argv[1], O_RDONLY);
-	out = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (in < 0 || out < 0)
-		err(3, NULL);
-	if (dup2(in, STDIN_FILENO) == -1)
-		err(2, NULL);
-	close(in);
-	i = 2;
+	else
+	{
+		if (argc < 4)
+			err(4, NULL);
+		i = 2;
+		in = open(argv[1], O_RDONLY);
+		out = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+		ft_part_2(in, out);
+	}
 	while (i < argc - 2)
 		pipex(argv[i++], env);
 	if (dup2(out, STDOUT_FILENO) == -1)
 		err(2, NULL);
 	close(out);
 	ft_execve(argv[argc - 2], env);
-	return (EXIT_SUCCESS);
 }

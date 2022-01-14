@@ -6,7 +6,7 @@
 #    By: mbarra <mbarra@student.21-school.ru>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/13 14:49:10 by mbarra            #+#    #+#              #
-#    Updated: 2022/01/13 15:21:48 by mbarra           ###   ########.fr        #
+#    Updated: 2022/01/14 16:07:45 by mbarra           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRC = 	ft_atoi.c ft_bzero.c ft_calloc.c\
 		ft_lstnew.c ft_lstadd_front.c ft_lstsize.c\
 		ft_lstlast.c ft_lstadd_back.c ft_lstdelone.c\
 		ft_lstclear.c ft_lstiter.c ft_lstmap.c\
+		ft_strcmp.c\
 
 OBJ = ${SRC:%.c=%.o}
 

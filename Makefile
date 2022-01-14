@@ -46,8 +46,7 @@ $(NAME): $(OBJ) $(HEADER)
 	@$(CC) $(CFLAGS) $(INC) $(OBJ) -o $(NAME) $(LIB)
 	@echo "\033[32mPipex Compiled! ᕦ(\033[31m♥\033[32m_\033[31m♥\033[32m)ᕤ"
 
-# поменяяять
-b: $(NAME_B)
+bonus: $(NAME_B)
 	
 $(NAME_B): $(OBJ_B) $(HEADER_B)
 	@make -C ./libft
@@ -57,8 +56,7 @@ $(NAME_B): $(OBJ_B) $(HEADER_B)
 clean:
 	@$(RM) $(OBJ) $(OBJ_B)
 
-# поменяяять
-f: clean
+fclean: clean
 	@make fclean -C ./libft
 	@$(RM) ./gnl/*.o
 	@$(RM) $(NAME) $(NAME_B)
