@@ -61,6 +61,6 @@ fclean: clean
 	@$(RM) ./gnl/*.o
 	@$(RM) $(NAME) $(NAME_B)
 
-re: fclean all b
+re: fclean all bonus
 
 .PHONY: bonus all clean fclean re
